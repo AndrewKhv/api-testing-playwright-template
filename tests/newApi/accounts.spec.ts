@@ -13,7 +13,7 @@ const authHeader = {
 //   currency: string,
 //   balance: number,
 //   createdAt: string
-// }ßß
+// }
 
 type CreatedAccountResp = {
   id: number
@@ -36,7 +36,7 @@ test.describe('/api/accounts critical path', () => {
     })
     const respBody: CreatedAccountResp = await response.json()
     console.log(respBody)
-    expect(response.status()).not.toBe(StatusCodes.FORBIDDEN)
+    expect(response.status()).not.toBe(StatusCodes['FORBIDDEN'])
     expect(response.status()).toBe(StatusCodes.CREATED)
     expect(respBody.owner).toBe(account.owner)
   })
