@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test'
 import { Login } from '../../dto/login-dto'
 import { createOrder, fetchJwt } from '../../helpers/api-helper'
 import { StatusCodes } from 'http-status-codes'
+import { LoginRequestBodySchema, TokenSchema } from '../../schema/LoginSchema'
+import { GetOrdersResponseSchema } from '../../schema/OrderSchema'
 
 let loginDto: Login
 export const baseUrl = 'https://backend.tallinn-learning.ee'
@@ -19,10 +21,11 @@ test.describe('Authorization flow', () => {
       password: process.env.DL_PASSWORD!,
     }
     const response = await request.post(baseUrl + loginEndpoint, {
-      data: user,
+      data: LoginRequestBodySchema.parse(user)
     })
     const token = await response.text()
-    expect(token).toBeDefined()
+    const validatedToken = TokenSchema.parse(token)
+    expect(validatedToken).toBeDefined()
   })
 
   test('should create order', async ({ request }) => {
@@ -48,6 +51,14 @@ test.describe('Authorization flow', () => {
     expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
   })
 
+  type Order = {
+    status: string,
+    courierId: number | null,
+    customerName: string,
+    customerPhone: string,
+    comment: string | null,
+    id: number
+  }
   test('should get orders with authorization token', async ({ request }) => {
     const token = await fetchJwt(request, loginDto)
 
@@ -59,8 +70,8 @@ test.describe('Authorization flow', () => {
     })
 
     expect(response.status()).toBe(200)
-    const orders = await response.json()
-    //console.log('Orders:', JSON.stringify(orders, null, 2))
+    const orders: Order[] = GetOrdersResponseSchema.parse(await response.json())
+    console.log('Orders:', JSON.stringify(orders, null, 2))
     expect(orders).toBeTruthy()
   })
 })
