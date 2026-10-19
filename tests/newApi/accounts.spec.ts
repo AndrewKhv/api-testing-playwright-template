@@ -35,7 +35,6 @@ test.describe('/api/accounts critical path', () => {
       data: account,
     })
     const respBody: CreatedAccountResp = await response.json()
-    console.log(respBody)
     expect(response.status()).not.toBe(StatusCodes['FORBIDDEN'])
     expect(response.status()).toBe(StatusCodes.CREATED)
     expect(respBody.owner).toBe(account.owner)
@@ -53,7 +52,6 @@ test.describe('/api/accounts critical path', () => {
         data: account,
       })
       const respBody: CreatedAccountResp = await response.json()
-      console.log(respBody)
       expect.soft(response.status(), `Tested ${currency} currency`).not.toBe(StatusCodes.FORBIDDEN)
       expect.soft(response.status(), `Tested ${currency} currency`).toBe(StatusCodes.CREATED)
       expect.soft(respBody.owner, `Tested ${currency} currency`).toBe(account.owner)
@@ -71,7 +69,6 @@ test.describe('/api/accounts negative tests', () => {
     })
 
     const respBody: CreatedAccountErrorResp = await response.json()
-    console.log(respBody)
     expect.soft(response.status()).not.toBe(StatusCodes.FORBIDDEN)
     expect.soft(response.status()).toBe(StatusCodes.BAD_REQUEST)
     expect.soft(respBody.error).not.toBeUndefined()
