@@ -21,7 +21,7 @@ test.describe('Authorization flow', () => {
       password: process.env.DL_PASSWORD!,
     }
     const response = await request.post(baseUrl + loginEndpoint, {
-      data: LoginRequestBodySchema.parse(user)
+      data: LoginRequestBodySchema.parse(user),
     })
     const token = await response.text()
     const validatedToken = TokenSchema.parse(token)
@@ -52,11 +52,11 @@ test.describe('Authorization flow', () => {
   })
 
   type Order = {
-    status: string,
-    courierId: number | null,
-    customerName: string,
-    customerPhone: string,
-    comment: string | null,
+    status: string
+    courierId: number | null
+    customerName: string
+    customerPhone: string
+    comment: string | null
     id: number
   }
   test('should get orders with authorization token', async ({ request }) => {
